@@ -56,7 +56,7 @@ class Drawing:
             was_change = False
             for i in range(len(filtered_tree)):
                 for k in range(len(filtered_tree)):
-                    if (filtered_tree["w2"].values[i] == filtered_tree["w1"].values[k] and i != k
+                    if (filtered_tree["w2"].values[i] == filtered_tree["w1"].values[k]
                             and filtered_tree["pos"].values[i] >= filtered_tree["pos"].values[k]):
                         filtered_tree.loc[k, "pos"] = filtered_tree.loc[i, "pos"] + 1
                         if filtered_tree["pos"].values[k] > max_:
@@ -64,6 +64,7 @@ class Drawing:
                         was_change = True
 
         max_ += 2
+        connected = set()
         for i in range(len(filtered_tree)):
             pfrom = 0
             pto = 0
@@ -73,8 +74,14 @@ class Drawing:
                     pfrom = k
                 elif filtered_tree["w2"].values[i] == filtered_morf["word_Id"].values[k]:
                     pto = k
-            
-            
+
+            if pto == pfrom:
+                continue
+
+            if pto in connected:
+                continue
+            connected.add(pto)
+
             pos = filtered_tree["pos"].values[i]
             builder.append("ctx.beginPath();")
             builder.append(f"ctx.strokeStyle='{self.get_color(filtered_tree["ct"].values[i][:2])}';")
@@ -83,6 +90,7 @@ class Drawing:
             builder.append("ctx.stroke();")
 
             tga1 = math.atan(((pfrom - pto) * vstep) / 20.0)
+
 
             if pto < pfrom:
                 builder.append("ctx.beginPath();")
@@ -96,7 +104,7 @@ class Drawing:
                 delty = math.cos(math.pi / 2 - tga1 - math.pi / 6) * 10
                 builder.append(f"ctx.lineTo({(pos + 1) * 20 - int(deltx)}, {pto * vstep + 7 + int(delty)});")
                 builder.append("ctx.stroke();")
-            elif pfrom > pto:
+            else:
                 tga1 = math.atan(20.0 / ((pto - pfrom) * vstep))
                 deltx = math.sin(tga1 - math.pi / 6) * 10
                 delty = math.cos(tga1 - math.pi / 6) * 10
@@ -107,21 +115,10 @@ class Drawing:
                 delty = math.sin(math.pi / 2 - tga1 - math.pi / 6) * 10
                 builder.append(f"ctx.lineTo({(pos+1)*20 - int(deltx)}, {pto * vstep + 7 - int(delty)});")
                 builder.append("ctx.stroke();")
-            else:
-                tga1 = math.atan(20.0 / vstep)
-                deltx = math.sin(tga1 - math.pi / 6) * 10
-                delty = math.cos(tga1 - math.pi / 6) * 10
-                builder.append(f"ctx.moveTo({(pos + 1) * 20 - int(deltx)}, {pto * vstep + 7 - int(delty)});")
-                builder.append(f"ctx.lineTo({(pos + 1) * 20}, {pto * vstep + 7});")
-
-                deltx = math.cos(math.pi / 2 - tga1 - math.pi / 6) * 10
-                delty = math.sin(math.pi / 2 - tga1 - math.pi / 6) * 10
-                builder.append(f"ctx.lineTo({(pos + 1) * 20 - int(deltx)}, {pto * vstep + 7 - int(delty)});")
-                builder.append("ctx.stroke();")
 
             builder.append("ctx.beginPath();")
             builder.append("ctx.strokeStyle='#ccc';")
-            builder.append(f"ctx.moveTo({(pos+1)*20}, {pto * vstep + 7});")
+            builder.append(f"ctx.moveTo({0}, {pto * vstep + 7});")
             builder.append(f"ctx.lineTo({max_*20-5}, {pto * vstep + 7});")
             builder.append("ctx.stroke();")
             builder.append("ctx.fillStyle = '#000';")
@@ -131,7 +128,6 @@ class Drawing:
 
         builder.append("ctx.fillStyle = '#000';")
         for i in range(len(filtered_morf)):
-            print(filtered_morf["word"].values[i].replace("\"", "'"))
             builder.append(f"ctx.fillText(\"{filtered_morf["word"].values[i].replace("\"", "'")}\", {20*max_}, {i * vstep + 12});")
 
         builder.close()

@@ -20,5 +20,6 @@ from django.urls import path
 from nlp import views
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', views.index_view, name='index'),
+    path('handler', views.handler_view, name='handler'),
 ]

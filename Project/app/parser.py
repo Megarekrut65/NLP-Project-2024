@@ -1,5 +1,5 @@
-import spacy
 import pandas as pd
+
 
 def pos_code(pos):
     pos_map = {
@@ -13,19 +13,21 @@ def pos_code(pos):
 
 def create_ct(token, head):
     dep_to_ct = {
-        "nsubj": "КЗ",  # Координаційний зв'язок
-        "case": "ПП",  # Прийменникова сполука
-        "obl": "ІП" if "AdpType=Prep" in token.morph else "ІС",  # Prepositional or not
-        "amod": "АС",  # Adjective modification
-        "advmod": "РС",  # Adverbial modification
-        "conj": "СУ",  # Сурядна сполука
-        "cc": "СУ",  # Coordinating conjunction
-        "obj": "ДП" if "Case=Acc" in token.morph else "ДС",  # Accusative vs other objects
-        "xcomp": "ДІ",  # Infinitival complement
-        "advcl": "0D",  # Adverbial clause
-        "vocative": "ЗВ",  # Звертання
+        "nsubj": "КЗ",
+        "nmod": "ІП",
+        "case": "ПП",
+        "obl": "ІП" if "AdpType=Prep" in token.morph else "ІС",
+        "amod": "АС",
+        "advmod": "РС",
+        "conj": "СУ",
+        "cc": "СУ",
+        "obj": "ДП" if "Case=Acc" in token.morph else "ДС",
+        "xcomp": "ДІ",
+        "advcl": "0D",
+        "mark": "0G",
+        "parataxis": "0Б",
+        "vocative": "ЗВ",
     }
-
     ct = dep_to_ct.get(token.dep_, "XX")
 
     if ct == "XX":
@@ -40,7 +42,8 @@ def create_ct(token, head):
 
 
 def markup(nlp, text):
-    paragraphs = text.split("\n\n")
+
+    paragraphs = text.split("\n")
 
     data = []
     for fk_id, paragraph in enumerate(paragraphs, start=1):
@@ -58,22 +61,22 @@ def markup(nlp, text):
                 data.append(row)
 
     df = pd.DataFrame(data)
-
     return df
 
 
 def tree(nlp, text):
-    paragraphs = text.split("\n\n")
+
+    paragraphs = text.split("\n")
 
     rows = []
-    word_counter = 0
     for fk_id, paragraph in enumerate(paragraphs, start=1):
         doc = nlp(paragraph)
         for sent_id, sentence in enumerate(doc.sents, start=1):
             for token in sentence:
-                word_counter += 1
-                w1 = word_counter
-                w2 = word_counter + 1 if token.head != token else word_counter
+                if token.head.i == token.i or token.pos_ == "PUNCT" or token.head.pos == "PUNCT":
+                    continue
+                w1 = token.i + 1
+                w2 = token.head.i + 1
                 ct = create_ct(token, token.head)
                 vidn = 1.0 if token.dep_ != "ROOT" else 0.0  # Вага зв'язку
                 comm = token.text if token.dep_ == "ROOT" else None
@@ -84,10 +87,9 @@ def tree(nlp, text):
                     "ct": ct,
                     "sentence_number": sent_id,
                     "vidn": vidn,
-                    "comm": comm
+                    "comm": comm,
                 })
 
     df = pd.DataFrame(rows)
-
     return df
 
