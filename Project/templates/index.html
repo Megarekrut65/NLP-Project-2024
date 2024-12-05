@@ -12,20 +12,22 @@
     <div class="row">
         <div class="col-md-6">
 
-            <form method="post">
+            <form method="post"  class="row">
                 {% csrf_token %}
-                <div class="mb-3">
-                    <label for="id" class="form-label">Номер тексту</label>
-                    <input class="form-control" id="id" name="text_id">
+                <label for="id" class="form-label">Номер тексту</label>
+                <div class="col-auto">
+                    <input class="form-control" id="id" name="text_id" type="number" required>
                 </div>
-                <button type="submit" class="btn btn-primary">Знайти</button>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Знайти</button>
+                </div>
             </form>
             <form method="post">
                 {% csrf_token %}
                 <div class="mb-3">
 
                     <label for="text" class="form-label">Ваш текст</label>
-                    <textarea class="form-control" id="text" name="text" rows="6">{{ text }}</textarea>
+                    <textarea class="form-control" id="text" name="text" rows="8" required>{{ text }}</textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">Обробити</button>
             </form>
