@@ -42,7 +42,6 @@ def create_ct(token, head):
 
 
 def markup(nlp, text):
-
     paragraphs = text.split("\n")
 
     data = []
@@ -65,7 +64,6 @@ def markup(nlp, text):
 
 
 def tree(nlp, text):
-
     paragraphs = text.split("\n")
 
     rows = []
@@ -92,4 +90,3 @@ def tree(nlp, text):
 
     df = pd.DataFrame(rows)
     return df
-

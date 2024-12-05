@@ -14,11 +14,13 @@
             margin-bottom: 20px;
             align-items: center;
         }
-        .tree-container{
+
+        .tree-container {
             display: flex;
             justify-content: center;
         }
-        .conc_tree{
+
+        .conc_tree {
             max-height: 100vh;
             max-width: 100%
         }
@@ -42,17 +44,25 @@
         <div class="col-md-6">
             {% if canvas %}
                 <div class="btn-container">
-                <p>Абзац</p>
-                    <a class="btn btn-secondary" {% if text_fk_prev%}href="handler?text_id={{ text_id }}&text_fk={{ text_fk_prev }}" {% else %}href="#"{% endif %}>Попередній ({{ text_fk_prev }})</a>
+                    <p>Абзац</p>
+                    <a class="btn btn-secondary"
+                       {% if text_fk_prev %}href="handler?text_id={{ text_id }}&text_fk={{ text_fk_prev }}"
+                       {% else %}href="#"{% endif %}>Попередній ({{ text_fk_prev }})</a>
                     <p>{{ text_fk }}/{{ paragraphs }}</p>
-                    <a class="btn btn-primary" {% if text_fk_next%}href="handler?text_id={{ text_id }}&text_fk={{ text_fk_next }}" {% else %}href="#"{% endif %}>Наступний
+                    <a class="btn btn-primary"
+                       {% if text_fk_next %}href="handler?text_id={{ text_id }}&text_fk={{ text_fk_next }}"
+                       {% else %}href="#"{% endif %}>Наступний
                         ({{ text_fk_next }})</a>
                 </div>
                 <div class="btn-container">
                     <p>Речення</p>
-                    <a class="btn btn-secondary" {% if sentence_prev%}href="handler?text_id={{ text_id }}&text_fk={{ text_fk }}&sentence={{ sentence_prev }}" {% else %}href="#"{% endif %}>Попереднє ({{ sentence_prev }})</a>
+                    <a class="btn btn-secondary"
+                       {% if sentence_prev %}href="handler?text_id={{ text_id }}&text_fk={{ text_fk }}&sentence={{ sentence_prev }}"
+                       {% else %}href="#"{% endif %}>Попереднє ({{ sentence_prev }})</a>
                     <p>{{ sentence }}/{{ sentences }}</p>
-                    <a class="btn btn-primary" {% if sentence_next%}href="handler?text_id={{ text_id }}&text_fk={{ text_fk }}&sentence={{ sentence_next }}" {% else %}href="#"{% endif %}>Наступне
+                    <a class="btn btn-primary"
+                       {% if sentence_next %}href="handler?text_id={{ text_id }}&text_fk={{ text_fk }}&sentence={{ sentence_next }}"
+                       {% else %}href="#"{% endif %}>Наступне
                         ({{ sentence_next }})</a>
                 </div>
                 <div class="tree-container">

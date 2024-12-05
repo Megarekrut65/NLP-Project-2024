@@ -9,6 +9,7 @@ from nlp.models import TextModel
 
 nlp_var = spacy.load("uk_core_news_sm")
 
+
 def handle_text(text):
     tree_frame = tree(nlp_var, text)
     morf_frame = markup(nlp_var, text)
@@ -54,13 +55,14 @@ def handler_view(request):
     vid_frame = pandas.read_csv("System/sintaxvind.csv")
 
     text_id = request.GET.get("text_id", None)
-    text_fk =int(request.GET.get("text_fk", 1))
+    text_fk = int(request.GET.get("text_fk", 1))
     sentence = int(request.GET.get("sentence", 1))
 
     if request.method == "GET":
         return create_page(request, text_id, text_fk, sentence, types_frame, vid_frame)
 
     return HttpResponse("Not found")
+
 
 def index_view(request):
     if request.method == "POST":
@@ -75,4 +77,3 @@ def index_view(request):
         return render(request, "index.html")
 
     return HttpResponse("Not found")
-

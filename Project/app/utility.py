@@ -1,5 +1,6 @@
 import pandas as pd
 
+
 def to_one_format(filename, header_count, selected_header=0):
     with open(filename, "r", encoding="utf-8") as file:
         lines = file.readlines()
@@ -12,7 +13,7 @@ def to_one_format(filename, header_count, selected_header=0):
 
     for line in data:
         values = line.strip().split("\t")
-        for i in range(required_count-len(values)):
+        for i in range(required_count - len(values)):
             values.append("")
 
         df.loc[len(df)] = values

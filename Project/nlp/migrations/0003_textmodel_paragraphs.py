@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('nlp', '0002_rename_morf_file_textmodel_morf_json'),
     ]
